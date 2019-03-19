@@ -247,6 +247,6 @@ print('Final Testing Accuracy: {:.5f}'.format(test_accuracy))
 
 # Set to True for Plots
 plot_losses(epoch_losses, show=False, filename='time_only_cnn.png')
-plot_accuracies(epoch_train_acc, epoch_val_acc, show=False, filename='time_only_cnn.png')
+plot_accuracies(epoch_train_acc, epoch_val_acc, show=False, filename='time_only_acc.png')
 
 
