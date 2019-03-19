@@ -103,6 +103,7 @@ def get_accuracy_from_data(model, trials, labels):
 
 
 def plot_losses(losses, modelname='1-D CNN', show=True, filename=None):
+    plt.figure()
     plt.plot(np.arange(len(losses), dtype=int)+1, losses)
     plt.xlabel('epoch')
     plt.ylabel('training loss')
@@ -113,6 +114,19 @@ def plot_losses(losses, modelname='1-D CNN', show=True, filename=None):
     if show:
         plt.show()
 
+def plot_accuracies(train_acc, val_acc, modelname='1-D CNN', show=True, filename=None):
+    plt.figure()
+    plt.plot(np.arange(len(train_acc), dtype=int)+1, train_acc, label='train')
+    plt.plot(np.arange(len(val_acc), dtype=int)+1, val_acc, label='validation')
+    plt.xlabel('epoch')
+    plt.ylabel('accuracies')
+    plt.title(modelname+' Accuracy History')
+    plt.legend()
+    plt.gcf().set_size_inches(10, 8)
+    if filename is not None:
+        plt.savefig(filename)
+    if show:
+        plt.show()
 
 
 class OneDimCNN(nn.Module):
@@ -174,6 +188,8 @@ criterion = nn.CrossEntropyLoss()
 # Training
 num_epochs = 100
 epoch_losses = []
+epoch_val_acc = []
+epoch_train_acc = []
 
 # Move Validation to GPU for speed
 X_valid_tensor, y_valid_tensor = torch.tensor(X_valid, device=device, dtype=torch.float), \
@@ -211,6 +227,8 @@ for epoch in range(num_epochs):
         epoch+1, num_epochs, epoch_loss, epoch_accuracy, val_accuracy))
 
     epoch_losses.append(epoch_loss)
+    epoch_val_acc.append(val_accuracy)
+    epoch_train_acc.append(epoch_accuracy)
     
     # Periodic decaying of lr
     if (epoch+1) % epochs_per_decay == 0:
@@ -229,5 +247,6 @@ print('Final Testing Accuracy: {:.5f}'.format(test_accuracy))
 
 # Set to True for Plots
 plot_losses(epoch_losses, show=False, filename='time_only_cnn.png')
+plot_accuracies(epoch_train_acc, epoch_val_acc, show=False, filename='time_only_cnn.png')
 
 
